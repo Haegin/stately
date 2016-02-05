@@ -14,24 +14,31 @@ module Stately
       end
     end
 
-    attr_reader :state_machine
-    delegate :state, to: :state_machine
+    attr_reader :state
 
     def initialize
       initial_state = self.class.initial_state.constantize
-      @state_machine = StateMachine.new(initial_state.new)
+      @state = initial_state.new(self)
     end
 
     def respond_to?(method)
-      state_machine.respond_to?(method) || super
+      state.accepts_event?(method) ||
+        state.respond_to?(method) ||
+        super
     end
 
     def method_missing(method, *args, &block)
-      if state_machine.respond_to?(method)
-        state_machine.public_send(method, *args, &block)
+      if state.accepts_event?(method)
+        # Call the method we created on the state for this event, passing
+        # ourself in as the context
+        event = state.public_send(method)
+        @state = event.process
+      elsif state.respond_to?(method)
+        state.public_send(method, *args, &block)
       else
         super
       end
     end
   end
 end
+

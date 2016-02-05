@@ -1,13 +1,14 @@
 module Stately
   module Event
-    attr_reader :destination
+    attr_reader :source, :destination
 
-    def initialize(destination:)
+    def initialize(source:, destination:)
+      @source = source
       @destination = destination
     end
 
     def process
-      destination.new
+      destination.new(source.context)
     end
   end
 end

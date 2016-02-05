@@ -9,16 +9,34 @@ module Stately
     end
 
     class_methods do
-      def transition_to(state, on: event)
-        @events << on.underscore.to_sym
-        define_method(on.underscore) do
-          get_constant(on).new(destination: get_constant(state))
+      def transition_to(state, on: event, config: {})
+        event_name = on.underscore.split("/").last.to_sym
+        @events << event_name
+
+        if config.has_key? :unless
+          config[:if] = proc { |*args| !config[:unless].call(*args) }
+        end
+
+        define_method(event_name) do
+          if config.fetch(:if) { proc { true } }.call(context)
+            get_constant(on).new(source: self, destination: get_constant(state))
+          end
+        end
+
+        define_method("can_#{event_name}?") do
+          config.fetch(:if) { proc { true } }.call(context)
         end
       end
 
       def events
         @events
       end
+    end
+
+    attr_reader :context
+
+    def initialize(context)
+      @context = context
     end
 
     def accepts_event?(event)
@@ -28,6 +46,8 @@ module Stately
     private
 
     def get_constant(str)
+      str.constantize
+    rescue NameError
       [self.class.name.deconstantize, str].join("::").constantize
     end
   end
