@@ -27,7 +27,11 @@ module Stately
     end
 
     def method_missing(method, *args, &block)
-      state_machine.public_send(method, *args, &block) || super
+      if state_machine.respond_to?(method)
+        state_machine.public_send(method, *args, &block)
+      else
+        super
+      end
     end
   end
 end
