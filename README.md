@@ -2,8 +2,10 @@
 
 [![Build Status](https://travis-ci.org/Haegin/stately.svg?branch=master)](https://travis-ci.org/Haegin/stately)
 
-A gem for managing state machines in Ruby that uses separate classes for States
-and Events, making it easier to manage complex state machines.
+A gem for managing state machines in Ruby that uses separate classes for states
+and events, making it easier to manage complex state machines. If your needs
+are simple you're probably better off with something like
+[state_machine](https://github.com/pluginaweek/state_machine).
 
 ## Installation
 
