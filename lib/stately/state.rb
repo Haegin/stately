@@ -9,7 +9,7 @@ module Stately
     end
 
     class_methods do
-      def transition_to(state, on: event, config: {})
+      def transition(to: state, on: event, config: {})
         event_name = on.underscore.split("/").last.to_sym
         @events << event_name
 
@@ -19,7 +19,7 @@ module Stately
 
         define_method(event_name) do
           if config.fetch(:if) { proc { true } }.call(context)
-            get_constant(on).new(source: self, destination: get_constant(state))
+            get_constant(on).new(source: self, destination: get_constant(to))
           end
         end
 

@@ -7,7 +7,7 @@ describe "A simple switch state machine" do
 
     class Off
       include Stately::State
-      transition_to "On", on: "Flip"
+      transition to: "On", on: "Flip"
 
       def powered?
         false
@@ -16,7 +16,7 @@ describe "A simple switch state machine" do
 
     class On
       include Stately::State
-      transition_to "Off", on: "Flip"
+      transition to: "Off", on: "Flip"
 
       def powered?
         true

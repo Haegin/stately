@@ -12,14 +12,14 @@ describe "A security door" do
 
     class Closed
       include Stately::State
-      transition_to "Door::Opened", on: "Door::Open", config: {
+      transition to: "Door::Opened", on: "Door::Open", config: {
         unless:  proc { |door| door.night? }
       }
     end
 
     class Opened
       include Stately::State
-      transition_to "Door::Closed", on: "Door::Close"
+      transition to: "Door::Closed", on: "Door::Close"
     end
 
     class Open
