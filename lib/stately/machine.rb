@@ -29,14 +29,24 @@ module Stately
 
     def method_missing(method, *args, &block)
       if state.accepts_event?(method)
-        # Call the method we created on the state for this event, passing
-        # ourself in as the context
-        event = state.public_send(method)
-        @state = event.process
+        fire_event(method)
       elsif state.respond_to?(method)
         state.public_send(method, *args, &block)
       else
         super
+      end
+    end
+
+    private
+
+    def fire_event(method)
+      # Call the method we created on the state for this event, passing
+      # ourself in as the context
+      event = state.public_send(method)
+      if event
+        @state = event.process
+      else
+        false
       end
     end
   end

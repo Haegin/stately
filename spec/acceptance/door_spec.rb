@@ -12,9 +12,7 @@ describe "A security door" do
 
     class Closed
       include Stately::State
-      transition to: "Door::Opened", on: "Door::Open", config: {
-        unless:  proc { |door| door.night? }
-      }
+      transition to: "Door::Opened", on: "Door::Open", unless:  proc { |door| door.night? }
     end
 
     class Opened
@@ -48,5 +46,10 @@ describe "A security door" do
     expect(door.can_open?).to be_truthy
     door.night = true
     expect(door.can_open?).to be_falsey
+  end
+
+  it "returns false if a transition fails" do
+    door.night = true
+    expect(door.open).to eq false
   end
 end
