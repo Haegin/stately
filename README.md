@@ -1,6 +1,8 @@
 # Stately
 
 [![Build Status](https://travis-ci.org/Haegin/stately.svg?branch=master)](https://travis-ci.org/Haegin/stately)
+[![Dependency Status](https://gemnasium.com/Haegin/stately.svg)](https://gemnasium.com/Haegin/stately)
+
 
 A gem for managing state machines in Ruby that uses separate classes for states
 and events, making it easier to manage complex state machines. If your needs
